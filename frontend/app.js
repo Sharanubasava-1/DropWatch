@@ -1,6 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const API =
-  params.get("api") || "http://localhost:3001/api/releases";
+  params.get("api") || "https://dropwatch-24qf.onrender.com/api/releases";
 
 const rowsEl = document.getElementById("rows");
 const emptyEl = document.getElementById("empty");
