@@ -16,6 +16,16 @@ app.use(
   })
 );
 app.use(express.json());
+
+app.get("/", (_req, res) => {
+  res.json({
+    name: "DropWatch API",
+    status: "ok",
+    health: "/api/health",
+    releases: "/api/releases",
+  });
+});
+
 app.use("/api", healthRouter);
 app.use("/api", releasesRouter);
 

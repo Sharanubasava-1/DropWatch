@@ -25,3 +25,7 @@ export function migrate() {
   const sql = fs.readFileSync(path.join(__dirname, "schema.sql"), "utf8");
   db.exec(sql);
 }
+
+export function closeDatabase() {
+  if (db.open) db.close();
+}

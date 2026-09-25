@@ -1,4 +1,4 @@
-import { migrate } from "../db/client.js";
+import { closeDatabase, migrate } from "../db/client.js";
 import {
   upsertRawPost,
   recentRawPosts,
@@ -49,10 +49,11 @@ if (isDirect) {
   refresh()
     .then((result) => {
       console.log(result);
-      process.exit(0);
+      closeDatabase();
     })
     .catch((err) => {
       logger.error("refresh_failed", { error: err.message });
-      process.exit(1);
+      closeDatabase();
+      process.exitCode = 1;
     });
 }
