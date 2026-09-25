@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: model-release-tracker-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: REFRESH_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        value: file:./data/tracker.db
+      - key: REDDIT_USER_AGENT
+        value: model-release-tracker/0.1
+
+  - type: cron
+    name: model-release-tracker-refresh
+    runtime: node
+    rootDir: backend
+    schedule: "0 */3 * * *"
+    buildCommand: npm install
+    startCommand: npm run refresh
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        value: file:./data/tracker.db
+      - key: REDDIT_USER_AGENT
+        value: model-release-tracker/0.1

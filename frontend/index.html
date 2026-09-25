@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Model Release Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <div>
+        <p class="eyebrow">HN + Reddit · last 48h</p>
+        <h1>Model Release Tracker</h1>
+        <p class="sub">
+          New AI model drops ranked by discussion velocity.
+        </p>
+      </div>
+      <p id="meta" class="meta">Loading…</p>
+    </header>
+
+    <section class="chart-wrap">
+      <canvas id="chart" height="120"></canvas>
+    </section>
+
+    <section>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Model</th>
+            <th>Summary</th>
+            <th>Velocity</th>
+            <th>Mentions</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <p id="empty" class="empty hidden">
+        No releases yet. Run <code>npm run refresh</code> in <code>backend/</code>.
+      </p>
+    </section>
+
+    <script src="app.js"></script>
+  </body>
+</html>
