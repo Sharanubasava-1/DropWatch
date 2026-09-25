@@ -1,4 +1,4 @@
-# Model Release Tracker
+# DropWatch
 
 Live leaderboard of new AI model drops, pulled from Hacker News and Reddit, classified with Claude (or a keyword fallback), and ranked by discussion velocity over the last 24–48 hours.
 
