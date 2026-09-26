@@ -10,12 +10,19 @@ on:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    env:
+      REFRESH_SECRET: ${{ secrets.REFRESH_SECRET != '' && secrets.REFRESH_SECRET || vars.REFRESH_SECRET }}
     steps:
       - name: Call DropWatch refresh endpoint
         run: |
+          if [ -z "$REFRESH_SECRET" ]; then
+            echo "REFRESH_SECRET is not configured in repository secrets/variables; skipping refresh call."
+            exit 0
+          fi
+
           response=$(curl -s -o response.json -w "%{http_code}" -X POST \
             "https://dropwatch-24qf.onrender.com/api/refresh" \
-            -H "x-refresh-secret: ${{ secrets.REFRESH_SECRET }}")
+            -H "x-refresh-secret: $REFRESH_SECRET")
 
           echo "HTTP status: $response"
           cat response.json
