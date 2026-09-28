@@ -5,6 +5,39 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+let accessToken = "";
+let tokenExpiresAt = 0;
+
+async function getAccessToken() {
+  if (
+    !config.redditClientId ||
+    !config.redditClientSecret
+  ) {
+    return null;
+  }
+
+  if (accessToken && Date.now() < tokenExpiresAt) return accessToken;
+
+  const credentials = Buffer.from(
+    `${config.redditClientId}:${config.redditClientSecret}`
+  ).toString("base64");
+  const res = await fetch("https://www.reddit.com/api/v1/access_token", {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${credentials}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": config.redditUserAgent,
+    },
+    body: "grant_type=client_credentials",
+  });
+
+  if (!res.ok) throw new Error(`Reddit OAuth ${res.status}`);
+  const data = await res.json();
+  accessToken = data.access_token || "";
+  tokenExpiresAt = Date.now() + Math.max(60, data.expires_in - 60) * 1000;
+  return accessToken;
+}
+
 async function searchSub(sub) {
   const params = new URLSearchParams({
     q: config.redditQuery,
@@ -13,9 +46,14 @@ async function searchSub(sub) {
     t: "week",
     limit: "25",
   });
-  const url = `https://www.reddit.com/r/${sub}/search.json?${params}`;
+  const token = await getAccessToken();
+  const baseUrl = token ? "https://oauth.reddit.com" : "https://www.reddit.com";
+  const url = `${baseUrl}/r/${sub}/search.json?${params}`;
   const res = await fetch(url, {
-    headers: { "User-Agent": config.redditUserAgent },
+    headers: {
+      "User-Agent": config.redditUserAgent,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
   });
   if (!res.ok) {
     throw new Error(`Reddit ${res.status} for r/${sub}`);

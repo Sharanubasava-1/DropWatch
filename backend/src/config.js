@@ -8,6 +8,8 @@ export const config = {
   frontendOrigin: process.env.FRONTEND_ORIGIN || "*",
   redditUserAgent:
     process.env.REDDIT_USER_AGENT || "model-release-tracker/0.1",
+  redditClientId: process.env.REDDIT_CLIENT_ID || "",
+  redditClientSecret: process.env.REDDIT_CLIENT_SECRET || "",
   lookbackHours: 48,
   keywords: [
     "GPT-",
