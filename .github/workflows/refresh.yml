@@ -1,5 +1,4 @@
 name: Refresh DropWatch
-
 on:
   schedule:
     - cron: "0 */3 * * *"
