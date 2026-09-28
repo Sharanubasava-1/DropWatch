@@ -3,7 +3,7 @@ import { completeJson } from "../utils/claudeClient.js";
 import { logger } from "../utils/logger.js";
 
 const RELEASE_RE =
-  /\b(GPT-?\d|Claude\s?\d|Llama\s?\d|Gemini|Mistral|Qwen|DeepSeek|Grok|open[- ]weights|model release|announc(ed|es)|launch(ed|es)?)\b/i;
+  /\b(GPT-?\d|Claude\s?\d|Llama\s?\d|Gemini|Mistral|Qwen|DeepSeek|Grok|open[- ]weights|open[- ]source model|new model|model release|model launch|announc(ed|es|ement)|launch(ed|es)|released|release|weights|available)\b/i;
 
 function chunk(items, size) {
   const out = [];
