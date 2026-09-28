@@ -4,6 +4,8 @@ import { logger } from "../utils/logger.js";
 
 const RELEASE_RE =
   /\b(GPT-?\d|Claude\s?\d|Llama\s?\d|Gemini|Mistral|Qwen|DeepSeek|Grok|open[- ]weights|open[- ]source model|new model|model release|model launch|announc(ed|es|ement)|launch(ed|es)|released|release|weights|available)\b/i;
+const AI_CANDIDATE_RE =
+  /\b(AI|LLM|language model|inference|neural network|open[- ]source)\b/i;
 
 function chunk(items, size) {
   const out = [];
@@ -12,17 +14,23 @@ function chunk(items, size) {
 }
 
 function keywordFallback(post) {
-  const hit = RELEASE_RE.test(post.title);
+  const releaseHit = RELEASE_RE.test(post.title);
+  const candidateHit = AI_CANDIDATE_RE.test(post.title);
   const nameMatch = post.title.match(
     /\b((?:GPT|Claude|Llama|Gemini|Mistral|Qwen|DeepSeek|Grok)[\w.\-]*)\b/i
   );
   return {
     source: post.source,
     source_id: post.source_id,
-    is_release: hit,
-    model_name: nameMatch ? nameMatch[1] : hit ? post.title.slice(0, 80) : null,
+    is_release: releaseHit || candidateHit,
+    model_name:
+      nameMatch
+        ? nameMatch[1]
+        : releaseHit || candidateHit
+          ? post.title.slice(0, 80)
+          : null,
     summary: post.title,
-    confidence: hit ? 0.45 : 0.15,
+    confidence: releaseHit ? 0.45 : 0.15,
     post,
   };
 }
